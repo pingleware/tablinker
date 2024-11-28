@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabbed Browser Links</title>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <style>
+        .tab-content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body class="w3-light-grey">
+    <div class="w3-container">
+        <h2>Dynamic Tabbed Browser Links</h2>
+        <div id="tab-container" class="w3-bar w3-border-bottom w3-light-grey"></div>
+        <div class="tab-content w3-padding w3-white" id="tab-content">
+            <p>Click a tab to open the corresponding URL in your browser.</p>
+        </div>
+    </div>
+    <script>
+        // Load settings.json dynamically
+        fetch('/settings.json')
+            .then(response => response.json())
+            .then(data => {
+                const tabContainer = document.getElementById('tab-container');
+                const tabContent = document.getElementById('tab-content');
+
+                // Create tabs dynamically
+                data.tabs.forEach((tab, index) => {
+                    // Create a tab button
+                    const tabButton = document.createElement('button');
+                    tabButton.className = 'w3-bar-item w3-button';
+                    tabButton.textContent = tab.name;
+                    tabButton.onclick = () => {
+                        // Open URL in a new browser tab
+                        window.open(tab.url, '_blank');
+                    };
+
+                    // Highlight the first tab by default
+                    if (index === 0) {
+                        tabButton.classList.add('w3-blue');
+                    }
+
+                    tabContainer.appendChild(tabButton);
+                });
+            })
+            .catch(error => {
+                console.error('Error loading settings.json:', error);
+                document.getElementById('tab-content').innerHTML =
+                    '<p class="w3-text-red">Failed to load settings.json.</p>';
+            });
+    </script>
+</body>
+</html>
